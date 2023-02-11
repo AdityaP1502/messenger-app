@@ -15,3 +15,6 @@ java/build/**
 
 # python env
 env/
+
+# obsidian note configuration files 
+**/.obsidian/
