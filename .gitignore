@@ -1,0 +1,17 @@
+# VSCODE configuration files
+./vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Compiled Files
+*.class
+bin/
+build/
+/bin1/
+java/build/**
+
+# python env
+env/
