@@ -15,7 +15,7 @@ class Client():
     """
     
     with self.state.get_lock():
-      return self.state.value()
+      return self.state.value
   
   def get_current_prompt(self):
     """return the current prompt

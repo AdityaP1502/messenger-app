@@ -7,6 +7,8 @@ from typing import Any, Callable, Iterable, Mapping
 
 
 class Receiver(Thread):
+  EOF = "\n"
+  
   def __init__(self, group: None = None, target: Callable[..., object] | None = None, name: str | None = None, args: Iterable[Any] = ..., kwargs: Mapping[str, Any] | None = None, *, daemon: bool | None = None) -> None:
     super().__init__(group, target, name, args, kwargs, daemon=daemon)
     
@@ -38,7 +40,10 @@ class Receiver(Thread):
             # if current_prompt == '':
             #   break
             
-            Receiver.process_incoming_response(incoming_response, conn, buffer)
+            packets = incoming_response.split(Receiver.EOF)
+            
+            for packet in packets[:-1]:
+              Receiver.process_incoming_response(packet, conn, buffer)
             # sys.stdout.write('\rGetting {}\n{}'.format(msg, current_prompt))
   
   @staticmethod
@@ -56,9 +61,8 @@ class Receiver(Thread):
   def process_incoming_response(packet : str, conn, buffer):
     """process response
     """
-    print(packet)
     restype, payload = Receiver.parse_message(packet)
-    
+  
     if restype == "OK":
       _, uid_value = payload.split("=", 1)
       try:
@@ -71,8 +75,14 @@ class Receiver(Thread):
         uid_integer = -1
         return
 
-    elif restype == "SENDMESSAGE":
-      data = payload.split("=", 3)
+    elif restype == "MESSAGE":
+      parsedResponse = payload.split(";", 2)
+      data = []
+      
+      for field in parsedResponse:
+        _, value = field.split("=", 1)
+        data.append(value)
+        
       buffer.put(data)
     
     elif restype == "ERROR":

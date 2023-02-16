@@ -25,23 +25,28 @@ if __name__ == "__main__":
   conn.register_channel()
   action = ""
   
+  if not conn.running:
+    print("Login failed. Please try again!")
+    sys.exit(-1)
+    
   while (action != "TERMINATE"):
     client.state.value = 0
     action = input("input action:").upper()
     
-    if conn.running:
+    if not conn.running:
       break
       
     if action == "SENDMESSAGE":
       client.state.value = 1
       recipient = input("recipient:")
       
-      if conn.running:
+      if not conn.running:
         break
         
       client.state.value = 2
       message = input("message:")
-      if conn.running:
+      
+      if not conn.running:
         break
       
       client.send_message(recipient=recipient, message=message, conn=conn)

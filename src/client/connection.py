@@ -46,17 +46,14 @@ class Connection():
     
     while self.request_status[uid] == "":
       continue
-      
+    
+    status = self.request_status[uid]
     self.request_status[uid] = ""
     self.request_state[uid] = 0
     
-    return self.request_status[uid]
+    return status
       
-  def __init_receiver(self):
-    t = threading.Thread(target=self.__receive, daemon=True)
-    t.start()
-    return t
-  
+
   def connect_to_socket(self, hostname: str, port : int):
     """Establish a socket connection to the server
     """
@@ -85,7 +82,7 @@ class Connection():
     message = "reqtype=CHECKIN;payload=username={}".format(username)
     
     status = self.send(message)
-    
+  
     if status == "OK":
       self.has_registered = True
       self.running = True

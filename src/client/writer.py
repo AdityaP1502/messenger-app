@@ -15,10 +15,13 @@ class Writer(Thread):
     return super().join(timeout)
   
   def write_to_console(self, client : Client):
-    
-    if not client.message_buffer.empty():
+    while True:
       data = client.message_buffer.get()
+      # sentinel is null
+      if data == None:
+        break
+      
       prompt = client.get_current_prompt()
-      sys.stdout.write("{} sent {}\n{}".format(data[1], data[2], prompt))
-    
+      sys.stdout.write("\r{} sent {}\n{}".format(data[0], data[2], prompt))
+      
   
