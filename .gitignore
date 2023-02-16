@@ -6,15 +6,18 @@
 .project
 .settings/
 
-# Compiled Files
+# Compiled Files (Java and Python)
 *.class
 bin/
 build/
 /bin1/
 java/build/**
+**/__pycache__
+**/*.pyc
 
 # python env
 env/
+
 
 # obsidian note configuration files 
 **/.obsidian/
