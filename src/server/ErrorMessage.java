@@ -10,6 +10,9 @@ public class ErrorMessage {
 	}
 
 	public String getErrorMessage() {
-		return err.name() + ':' + err.getErrorDescription() + message;
+		if (!message.equals(""))
+			return err.name() + ':' + err.getErrorDescription() + "." + message;
+		
+		return err.name() + ':' + err.getErrorDescription();
 	}
 }

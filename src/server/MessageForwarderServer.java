@@ -21,6 +21,7 @@ public class MessageForwarderServer {
 	private static Map<String, String> callTable;
 
 	private static final int BUFFER_SIZE = 4096;
+	private static final char EOF = '\n';
 
 	public static void main(String[] args) throws IOException {
 		Selector selector = Selector.open();
@@ -115,7 +116,7 @@ public class MessageForwarderServer {
 		// put the string into the buffer and
 		// write the buffer into the channel
 		System.out.println("Writing " + response + " to " + client.getRemoteAddress());
-		putStringToBuffer(buffer, response);
+		putStringToBuffer(buffer, response + EOF);
 
 		buffer.flip();
 		client.write(buffer);
