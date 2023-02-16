@@ -84,9 +84,11 @@ public class MessageForwarderServer {
 				}
 
 			}
-
+			
+			clientTable.remove(username);
+			clientIPAddressTable.remove(client.getRemoteAddress());
+			
 			System.out.println("Removing " + username + " from registered channel");
-
 			System.out.println(username + " is offline");
 		}
 
@@ -130,7 +132,7 @@ public class MessageForwarderServer {
 	private static void sendErrorMessage(ByteBuffer buffer, SocketChannel client, ErrorMessage err, String uid) throws IOException {
 
 		ResponseHeader header = ResponseHeader.ERROR;
-		String payload = "status="  + err.getErrorMessage() + "uid=" + uid;
+		String payload = "status="  + err.getErrorMessage() + ";uid=" + uid;
 		String response = makeResponseMessage(header.getHeader(), payload);
 		writeResponseToChannel(buffer, client, response);
 	}
@@ -228,31 +230,34 @@ public class MessageForwarderServer {
 			req = RequestType.valueOf(parsedRequestField[1]);
 			switch (req) {
 			case CHECKIN:
-				checkIn(buffer, client, parsedPayloadField[1], uid);
+				checkIn(buffer, client, parsedPayloadField[1], parsedUIDRequestField[1]);
 				break;
 
 			case SENDMESSAGE:
-				sendMessage(buffer, client, parsedPayloadField[1], uid);
+				sendMessage(buffer, client, parsedPayloadField[1], parsedUIDRequestField[1]);
 				break;
 
 			case INITIATECALL:
-				callHandler(buffer, client, parsedPayloadField[1], CallStatus.INCOMINGCALL, uid);
+				callHandler(buffer, client, parsedPayloadField[1], CallStatus.INCOMINGCALL, 
+						parsedUIDRequestField[1]);
 				break;
 
 			case ACCEPTCALL:
-				callHandler(buffer, client, parsedPayloadField[1], CallStatus.CALLACCEPTED, uid);
+				callHandler(buffer, client, parsedPayloadField[1], CallStatus.CALLACCEPTED, 
+						parsedUIDRequestField[1]);
 				break;
 
 			case DECLINECALL:
-				callHandler(buffer, client, parsedPayloadField[1], CallStatus.CALLDECLINED, uid);
+				callHandler(buffer, client, parsedPayloadField[1], CallStatus.CALLDECLINED, 
+						parsedUIDRequestField[1]);
 				break;
 
 			case TIMEOUTCALL:
-				callHandler(buffer, client, parsedPayloadField[1], CallStatus.CALLTIMEOUT, uid);
+				callHandler(buffer, client, parsedPayloadField[1], CallStatus.CALLTIMEOUT, parsedUIDRequestField[1]);
 				break;
 
 			case TERMINATE:
-				terminateConnection(buffer, client, parsedPayloadField[1], uid);
+				terminateConnection(buffer, client, parsedPayloadField[1], parsedUIDRequestField[1]);
 				break;
 
 			default:
