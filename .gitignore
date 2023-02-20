@@ -1,5 +1,5 @@
 # VSCODE configuration files
-./vscode/
+.vscode/
 
 # Eclipse
 .classpath
@@ -13,11 +13,13 @@ build/
 /bin1/
 java/build/**
 **/__pycache__
-**/*.pyc
+*.pyc
 
 # python env
 env/
 
-
 # obsidian note configuration files 
 **/.obsidian/
+
+# environment variables
+*.env
